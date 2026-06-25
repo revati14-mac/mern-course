@@ -54,7 +54,7 @@ app.get('/students', function(req, res) {
 
 app.get('/contact', function(req, res) {
     
-    res.send('<h1>Contach Us</h1><p>Revati mohadare</p><p>revati@123</p><p>Tulsiramji Gaikwad Patil college of Engineering and Technology</p>');
+    res.send('<h1>Contach Us</h1><p>Revati mohadare</p><p>revati@123gmail.com</p><p>Tulsiramji Gaikwad Patil college of Engineering and Technology</p>');
 
 });
 
