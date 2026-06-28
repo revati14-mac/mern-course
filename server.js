@@ -1,89 +1,173 @@
-// ─── server.js ─────────────────────────────
+// ─── server.js (Day 5 — FINAL VERSION) ─────────────────────────
 
-// Load the Express package
+const express  = require('express');
 
-const express = require('express');
+const mongoose = require('mongoose');
 
- 
-
-// Create an Express application
-
-const app = express();
+const path     = require('path');
 
  
 
-// Define the port number our server will listen on
+const app  = express();
 
 const PORT = 3000;
 
  
 
-// ─── ROUTES ────────────────────────────────
+// ─── MIDDLEWARE ───────────────────────────────────────────────
 
-// Route 1: Home page
+// 1. Serve static files from the 'public' folder
 
-app.get('/', function(req, res) {
+app.use(express.static('public'));
 
-    res.send('<h1>Welcome to My MERN Server!</h1><p>The server is running on Day 3.</p>');
+ 
+
+// 2. Parse URL-encoded form data (needed to read req.body)
+
+app.use(express.urlencoded({ extended: true }));
+
+ 
+
+// ─── MONGODB CONNECTION ───────────────────────────────────────
+
+// Replace with YOUR connection string from Atlas (Day 4)
+
+const MONGO_URI = 'mongodb+srv://revatimohadare_14:passrevatikey1425@cluster0.suwynyr.mongodb.net/?appName=Cluster0';
+
+ 
+
+mongoose.connect(MONGO_URI)
+
+  .then(function() {
+
+    console.log('✅ Connected to MongoDB successfully!');
+
+  })
+
+  .catch(function(error) {
+
+    console.log('❌ MongoDB connection failed:', error.message);
+
+  });
+
+ 
+
+// ─── SCHEMA & MODEL ──────────────────────────────────────────
+
+const studentSchema = new mongoose.Schema({
+
+    name:    { type: String, required: true },
+
+    surname: { type: String, required: true }
 
 });
 
  
 
-// Route 2: About page
+const Student = mongoose.model('Student', studentSchema);
 
-app.get('/about', function(req, res) {
+ 
 
-    res.send('<h1>About Page</h1><p>This server is built with Node.js and Express.js</p>');
+// ─── ROUTES ──────────────────────────────────────────────────
+
+// Route 1: Serve the form page
+
+// When browser visits http://localhost:3000
+
+// Express will automatically serve public/form.html
+
+// because of the express.static middleware above
+
+ 
+
+// Route 2: Receive form submission
+
+app.post('/submit', async function(req, res) {
+
+    try {
+
+        // Read the form data from the request body
+
+        const studentName    = req.body.name;
+
+        const studentSurname = req.body.surname;
+
+ 
+
+        // Log to terminal so we can see the data
+
+        console.log('New student received:');
+
+        console.log('Name:    ' + studentName);
+
+        console.log('Surname: ' + studentSurname);
+
+ 
+
+        // Create a new Student document
+
+        const newStudent = new Student({
+
+            name:    studentName,
+
+            surname: studentSurname
+
+        });
+
+ 
+
+        // Save to MongoDB
+
+        await newStudent.save();
+
+        console.log('✅ Student saved to MongoDB!');
+
+ 
+
+        // Send a success response to the browser
+
+        res.send(`
+
+            <html>
+
+            <body>
+
+                <h1>✅ Registration Successful!</h1>
+
+                <p>Name: ${studentName}</p>
+
+                <p>Surname: ${studentSurname}</p>
+
+                <p>Your details have been saved to the database.</p>
+
+                <a href='/form.html'>Go Back to Form</a>
+
+            </body>
+
+            </html>
+
+        `);
+
+ 
+
+    } catch (error) {
+
+        console.log('❌ Error:', error.message);
+
+        res.send('Something went wrong: ' + error.message);
+
+    }
 
 });
 
  
 
-// Route 3: Students page
-
-app.get('/students', function(req, res) {
-
-    res.send('<h1>Students</h1><p>This page will show student data later!</p>');
-
-});
-
-
-
-//Route 4: Contact
-
-app.get('/contact', function(req, res) {
-    
-    res.send('<h1>Contach Us</h1><p>Revati mohadare</p><p>revati@123</p><p>Tulsiramji Gaikwad Patil college of Engineering and Technology</p>');
-
-});
-
-
-//Route 5: course
-
-app.get('/courses', function(req, res) {
-
-    res.send('<h1>Current semester subjects list</h1><ul><li>Operating system</li><li>Software engineering and testing</li><li>ENDS</li><li>Seminar and project initiation course</li>');
-
-});
- 
-
-// Route : Dynamic welcome route
-
-app.get('/welcome/:name', function(req, res) {
-
-    let name = req.params.name;
-    res.send('<h1>Welcome, ' + name + '!</h1>');
-});
-
-// ─── START SERVER ──────────────────────────
-
-// Tell the server to start listening for requests
+// ─── START SERVER ────────────────────────────────────────────
 
 app.listen(PORT, function() {
 
     console.log('Server is running at http://localhost:' + PORT);
 
-    console.log('Press Ctrl + C to stop the server');
+    console.log('Open http://localhost:' + PORT + '/form.html in your browser');
 
 });
