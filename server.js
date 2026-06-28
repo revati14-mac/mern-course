@@ -161,8 +161,46 @@ app.post('/submit', async function(req, res) {
 });
 
  
+// Route 3: Students page
 
-// ─── START SERVER ────────────────────────────────────────────
+app.get('/students', function(req, res) {
+
+    res.send('<h1>Students</h1><p>This page will show student data later!</p>');
+
+});
+
+
+
+//Route 4: Contact
+
+app.get('/contact', function(req, res) {
+    
+    res.send('<h1>Contach Us</h1><p>Revati mohadare</p><p>revati@123gmail.com</p><p>Tulsiramji Gaikwad Patil college of Engineering and Technology</p>');
+
+});
+
+
+//Route 5: course
+
+app.get('/courses', function(req, res) {
+
+    res.send('<h1>Current semester subjects list</h1><ul><li>Operating system</li><li>Software engineering and testing</li><li>ENDS</li><li>Seminar and project initiation course</li>');
+
+});
+ 
+
+// Route : Dynamic welcome route
+
+app.get('/welcome/:name', function(req, res) {
+
+    let name = req.params.name;
+    res.send('<h1>Welcome, ' + name + '!</h1>');
+});
+
+// ─── START SERVER ──────────────────────────
+
+// Tell the server to start listening for requests
+>>>>>>> c6b2732f8051308b443bc44c277bc2d9079afd17
 
 app.listen(PORT, function() {
 
