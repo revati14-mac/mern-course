@@ -1,4 +1,5 @@
 // ─── server.js (Day 5 — FINAL VERSION) ─────────────────────────
+require('dotenv').config();
 
 const express  = require('express');
 
@@ -32,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Replace with YOUR connection string from Atlas (Day 4)
 
-const MONGO_URI = 'mongodb+srv://revatimohadare_14:<db_password>@cluster0.suwynyr.mongodb.net/?appName=Cluster0';
+const MONGO_URI = process.env.MONGO_URI;
 
 
 mongoose.connect(MONGO_URI)
@@ -57,7 +58,11 @@ const studentSchema = new mongoose.Schema({
 
     name:    { type: String, required: true },
 
-    surname: { type: String, required: true }
+    surname: { type: String, required: true },
+
+    email:    { type: String, required: true },
+
+    mobile: { type: String, required: true }
 
 });
 
@@ -91,6 +96,10 @@ app.post('/submit', async function(req, res) {
 
         const studentSurname = req.body.surname;
 
+        const studentEmail   = req.body.email;    
+
+        const studentMobile  = req.body.mobile;   
+
  
 
         // Log to terminal so we can see the data
@@ -101,6 +110,10 @@ app.post('/submit', async function(req, res) {
 
         console.log('Surname: ' + studentSurname);
 
+        console.log('Email:   ' + studentEmail);
+
+        console.log('Mobile:  ' + studentMobile);
+
  
 
         // Create a new Student document
@@ -109,7 +122,11 @@ app.post('/submit', async function(req, res) {
 
             name:    studentName,
 
-            surname: studentSurname
+            surname: studentSurname,
+
+            email:   studentEmail,    
+
+            mobile:  studentMobile
 
         });
 
@@ -133,9 +150,13 @@ app.post('/submit', async function(req, res) {
 
                 <h1>✅ Registration Successful!</h1>
 
-                <p>Name: ${studentName}</p>
+                <p><strong>Name:</strong> ${studentName}</p>
 
-                <p>Surname: ${studentSurname}</p>
+                <p><strong>Surname:</strong> ${studentSurname}</p>
+
+                <p><strong>Email:</strong> ${studentEmail}</p>
+
+                <p><strong>Mobile:</strong> ${studentMobile}</p>
 
                 <p>Your details have been saved to the database.</p>
 
@@ -159,42 +180,6 @@ app.post('/submit', async function(req, res) {
 
 });
 
- 
-// Route 3: Students page
-
-app.get('/students', function(req, res) {
-
-    res.send('<h1>Students</h1><p>This page will show student data later!</p>');
-
-});
-
-
-
-//Route 4: Contact
-
-app.get('/contact', function(req, res) {
-    
-    res.send('<h1>Contach Us</h1><p>Revati mohadare</p><p>revati@123gmail.com</p><p>Tulsiramji Gaikwad Patil college of Engineering and Technology</p>');
-
-});
-
-
-//Route 5: course
-
-app.get('/courses', function(req, res) {
-
-    res.send('<h1>Current semester subjects list</h1><ul><li>Operating system</li><li>Software engineering and testing</li><li>ENDS</li><li>Seminar and project initiation course</li>');
-
-});
- 
-
-// Route : Dynamic welcome route
-
-app.get('/welcome/:name', function(req, res) {
-
-    let name = req.params.name;
-    res.send('<h1>Welcome, ' + name + '!</h1>');
-});
 
 // ─── START SERVER ──────────────────────────
 
