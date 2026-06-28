@@ -32,9 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Replace with YOUR connection string from Atlas (Day 4)
 
-const MONGO_URI = 'mongodb+srv://revatimohadare_14:passrevatikey1425@cluster0.suwynyr.mongodb.net/?appName=Cluster0';
+const MONGO_URI = 'mongodb+srv://revatimohadare_14:<db_password>@cluster0.suwynyr.mongodb.net/?appName=Cluster0';
 
- 
 
 mongoose.connect(MONGO_URI)
 
@@ -200,7 +199,6 @@ app.get('/welcome/:name', function(req, res) {
 // ─── START SERVER ──────────────────────────
 
 // Tell the server to start listening for requests
->>>>>>> c6b2732f8051308b443bc44c277bc2d9079afd17
 
 app.listen(PORT, function() {
 
